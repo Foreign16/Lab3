@@ -1,0 +1,120 @@
+//Q1 (25 points): Study the following code to answer the question below
+
+class Ticket(var band: String, var price: Int) {}
+def q1(): Unit = {
+   var tickets = List(
+     new Ticket("Band-Maid", 3),
+     new Ticket("BabyMetal", 5),
+     new Ticket("Eir Aoi", 2),
+     new Ticket("Radwimps", 4),
+     new Ticket("Linked Horizon", 3)
+   )
+
+   val comparator: (Ticket, Ticket) => Boolean =
+     (a: Ticket, b: Ticket) => a.band.length() / a.price  >  b.band.length() / b.price
+
+   tickets = tickets.sortWith(comparator)
+
+   for(ticket <- tickets){
+     println(ticket.band)
+   }
+ }
+q1()
+
+//In what order are the elements of the inventory list printed at the end of the q1() method call?
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+//Q2 (25 points): Study the following code to answer the question below
+def f(n: Int): Int = {
+  if(n>=10){
+    2
+  } else{
+    n + f(n * 2)
+  }
+}
+print(f(2))
+//What is returned by the print statement above?
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+//Q3 (25 points): Study the following code to answer the question below
+def f(n:Int): Int = {
+  if(n == 1){
+    1
+  } else{
+    1/n + f(n-1) + f(n/2)
+  }
+}
+print(f(4))
+//What is returned by the print statement above?
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+ //Q4 (25 points): Study the following code to answer the question below
+class Ticket(var band: String, var price: Int) {}
+class LinkedListNode[A](var value: A, var next: LinkedListNode[A]) {
+
+  def foreachTicket(f: A => Int): Int = {
+    if (this.next == null) {
+      f(this.value)
+    }
+    else {
+      f(this.value) + this.next.foreachTicket(f)
+    }
+  }
+
+  def prepend(a: A): LinkedListNode[A] = {
+    new LinkedListNode[A](a, this)
+  }
+
+  def map[B](f: A => B): LinkedListNode[B] = {
+    val newValue = f(this.value)
+    if (this.next == null) {
+      new LinkedListNode[B](newValue, null)
+    } else {
+      new LinkedListNode[B](newValue, this.next.map(f))
+    }
+  }
+
+  def foreach(f: A => Unit): Unit = {
+    f(this.value)
+    if (this.next != null) {
+      this.next.foreach(f)
+    }
+  }
+}
+
+object q4 {
+  def main(args: Array[String]): Unit = {
+    def q4(): Int = {
+      var myList: LinkedListNode[Ticket] = new LinkedListNode[Ticket](
+        new Ticket("Beastie Boys", 5), null
+      )
+      myList = myList.prepend(new Ticket("Band-Maid", 3))
+      myList = myList.prepend(new Ticket("BabyMetal", 5))
+      myList = myList.prepend(new Ticket("Eir Aoi", 2))
+      myList = myList.prepend(new Ticket("Radwimps", 9))
+      myList = myList.prepend(new Ticket("Linked Horizon", 10))
+
+      val f: Ticket => Unit = (x: Ticket) => x.price += 2
+      myList.foreach(f)
+
+      val g: Ticket => Int = (ticket: Ticket) => {
+        if(ticket.price < 10){
+          ticket.price + 5
+        }
+        else{
+          ticket.price + 2
+        }
+      }
+      myList.foreachTicket(g)
+    }
+    print(q4())
+  }
+}
+//when the above print statement is executed what is printed to the screen?
+
+
+
+
